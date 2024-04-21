@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
-import { register } from "../api/auth";
+import axios from "axios";
 
 const RegisterForm = () => {
   const [email, setEmail] = useState("");
@@ -10,9 +10,11 @@ const RegisterForm = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await register(email, password);
+      await axios.post("http://localhost:3001/register", { email, password });
+      console.log("User registered successfully");
     } catch (error) {
-      setError(error.message);
+      console.error("Error registering user:", error);
+      setError("Failed to register user");
     }
   };
 

@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
-import { getUsers } from "../api/users";
+import axios from "axios";
 
-const UserManagement = () => {
+const UserManagement = ({ token }) => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await getUsers();
+        const response = await axios.get("http://localhost:3001/users", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setUsers(response.data);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
     };
     fetchUsers();
-  }, []);
+  }, [token]);
 
   return (
     <div>

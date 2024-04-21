@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
-import { login } from "../api/auth";
+import axios from "axios";
 
-const LoginForm = () => {
+const LoginForm = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -10,9 +10,16 @@ const LoginForm = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await login(email, password);
+      const response = await axios.post("http://localhost:3001/login", {
+        email,
+        password,
+      });
+      const { token } = response.data;
+      localStorage.setItem("token", token);
+      onLogin(token);
     } catch (error) {
-      setError(error.message);
+      console.error("Error logging in:", error);
+      setError("Invalid email or password");
     }
   };
 
